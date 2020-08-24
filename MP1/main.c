@@ -94,6 +94,11 @@ int query_by_ID(sqlite3 *db, int ID){
     return 0;
 }
 
+// close_database(): Close the database instance.
+void close_database(sqlite3 *db){
+    sqlite3_close(db);
+}
+
 int main(){
 
     sqlite3 *db;
@@ -101,6 +106,7 @@ int main(){
     // Connect & Create table
     if(init(&db)) return 1;
 
+    /*
     // Add students
     if(add_student(db, 2019012380, "GT", 3.9, 19)) return 1;
     if(add_student(db, 2019012382, "YXD", 1.3, 19)) return 1;
@@ -116,7 +122,38 @@ int main(){
     if(query_by_ID(db, 2019012382)) return 1; // Find YXD again, no record
 
     // Close the database instance
-    sqlite3_close(db);
+    close_database(db);
+    */
+
+    printf("Thanks for testing MP1 by Xiaodi Yuan (2019012382).\n");
+    printf("Options:\n");
+    printf("  Add    : A [ID] [Name] [GPA] [Age]\n");
+    printf("  Remove : R [ID]\n");
+    printf("  Query  : Q [ID]\n");
+    printf("  Close  : C\n");
+
+    char op[100], Name[100];
+    int ID, Age;
+    double GPA;
+    while(1){
+        scanf("%s", op);
+        if(op[0] == 'A'){
+            scanf("%d%s%lf%d", &ID, Name, &GPA, &Age);
+            add_student(db, ID, Name, GPA, Age);
+        }
+        else if(op[0] == 'R'){
+            scanf("%d", &ID);
+            remove_student(db, ID);
+        }
+        else if(op[0] == 'Q'){
+            scanf("%d", &ID);
+            query_by_ID(db, ID);
+        }
+        else if(op[0] == 'C'){
+            close_database(db);
+            break;
+        }
+    }
 
     return 0;
 }
