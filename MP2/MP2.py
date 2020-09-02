@@ -142,7 +142,7 @@ def CheckRequirement(studentID, courseID):
         return False
     return True
 
-def RegisterCourse(studentID, courseID): # TODO: transaction
+def RegisterCourse(studentID, courseID):
     print('[Operation Log] Registering student {} to course {}...'.format(studentID, courseID), end='')
     if(not CheckRequirement(studentID, courseID)):
         connect.rollback()
