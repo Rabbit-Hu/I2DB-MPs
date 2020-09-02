@@ -40,9 +40,9 @@ def ConnectDatabase():
                         BEGIN
                             UPDATE Course SET RemainCapacity = (
                                 SELECT Capacity - (
-                                    SELECT COUNT(*) FROM Course_registration WHERE CourseID = 102
+                                    SELECT COUNT(*) FROM Course_registration WHERE CourseID = INSERTED.CourseID
                                 )
-                                FROM Course WHERE CourseID = 102
+                                FROM Course WHERE CourseID = INSERTED.CourseID
                             )
                             FROM INSERTED
                             WHERE Course.CourseID = INSERTED.CourseID
