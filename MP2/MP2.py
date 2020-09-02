@@ -40,7 +40,9 @@ def ConnectDatabase():
                         BEGIN
                             UPDATE Course SET RemainCapacity = (
                                 SELECT Capacity - (
-                                    SELECT COUNT(*) FROM Course_registration WHERE CourseID = INSERTED.CourseID
+                                    SELECT COUNT(*) FROM Course_registration
+                                    WHERE CourseID = INSERTED.CourseID
+                                    AND Grade IS NULL
                                 )
                                 FROM Course WHERE CourseID = INSERTED.CourseID
                             )
@@ -49,16 +51,19 @@ def ConnectDatabase():
                         END''')
     cursor.execute(  '''CREATE TRIGGER Update_RemainCapacity_when_modify_registration
                         ON Course_registration
-                        AFTER INSERT, DELETE
+                        AFTER INSERT, UPDATE, DELETE
                         AS
                         BEGIN
                             UPDATE Course SET RemainCapacity = RemainCapacity - 1
                             FROM INSERTED
-                            WHERE Course.CourseID = INSERTED.CourseID;
+                            WHERE Course.CourseID = INSERTED.CourseID
+                            AND INSERTED.Grade IS NULL;
                             UPDATE Course SET RemainCapacity = RemainCapacity + 1
                             FROM DELETED
-                            WHERE Course.CourseID = DELETED.CourseID;
+                            WHERE Course.CourseID = DELETED.CourseID
+                            AND DELETED.Grade IS NULL;
                         END''')
+    # Grading a student means that the student has completed the course, and hence does not take up capacity any more
     connect.commit()
     print('[Operation Log] Successfully connected to the database.')
     return connect, cursor
@@ -102,7 +107,7 @@ def DeleteCourse(ID):
     print('[Operation Log] Successfully deleted course {}.'.format(ID))
 
 def EnrolledStudent(ID):
-    cursor.execute('SELECT COUNT(*) FROM Course_registration WHERE CourseID = ?;', ID) # No grade means new students
+    cursor.execute('SELECT COUNT(*) FROM Course_registration WHERE CourseID = ? AND Grade IS NULL;', ID) # No grade means new students
     row = cursor.fetchone()
     connect.commit()
     return row[0]
@@ -193,7 +198,23 @@ def UpdateGrade(studentID, courseID, new_grade):
     print("[Operation Log] Successfully updated student {}'s grade for course {} to {}.".format(studentID, courseID, new_grade))
 
 def ComputeGPA(studentID): 
-    cursor.execute("SELECT SUM(Course_registration.Grade * Course.CreditHour) / SUM(Course.CreditHour) FROM Course_registration, Course WHERE StudentID = ? AND Course_registration.CourseID = Course.CourseID AND Course_registration.Grade IS NOT NULL", studentID)
+    cursor.execute(  '''SELECT SUM((
+                            CASE
+                            WHEN Grade >= 90 THEN 4.0
+                            WHEN Grade >= 85 THEN 3.6
+                            WHEN Grade >= 80 THEN 3.3
+                            WHEN Grade >= 77 THEN 3.0
+                            WHEN Grade >= 73 THEN 2.6
+                            WHEN Grade >= 70 THEN 2.0
+                            WHEN Grade >= 63 THEN 1.6
+                            WHEN Grade >= 60 THEN 1.3
+                            ELSE 0.0
+                            END
+                        )* Course.CreditHour) / SUM(Course.CreditHour) 
+                        FROM Course_registration, Course 
+                        WHERE StudentID = ? 
+                        AND Course_registration.CourseID = Course.CourseID 
+                        AND Course_registration.Grade IS NOT NULL''', studentID)
     ret = cursor.fetchone()[0]
     connect.commit()
     return ret
@@ -234,15 +255,10 @@ InsertStudent(82, 'Xiaodi Yuan', 19, 'AI') # This student should NOT be inserted
 InsertStudent(84, 'Han Wang', 19, 'AI')
 PrintTable('Student') # Check if the students insertion is right
 
-# Prevent SQL insertion
-
-InsertCourse(233, "SQL Insertion", 2, 4, "<Req><Dept> * FROM Course;) DROP TABLE Coourse; -- </Dept></Req>")
-CheckRequirement(82, 233)
-
 # Insert some courses.
-InsertCourse(101, 'Machine Learning', 2, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
+InsertCourse(101, 'Machine Learning', 3, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
 InsertCourse(102, 'Intro to CS', 2, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
-InsertCourse(103, 'Intro to AI', 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+InsertCourse(103, 'Intro to AI', 2, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
 InsertCourse(104, 'C++', 3, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
 InsertCourse(105, 'Python', 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
 InsertCourse(106, 'Intro to DB', 3, 2, '''<Req>
@@ -276,7 +292,7 @@ UpdateGrade(82, 106, 59)
 RegisterCourse(82, 101) # Should fail because only AI students can register for course 101
 print('Academic History of student 82: ' + str(RetrieveAcademicHistory(82)))
 print('(StudentID, CourseID) pairs of failure records: ' + str(RetrieveFailureHistory()))
-print('GPA of student 82: ' + str(ComputeGPA(82))) # Should get (88*3 + 95*4 + 92*3 + 59*2)/(3+4+3+2) = 86.50
+print('GPA of student 82: %.2f' % (ComputeGPA(82))) # Should get (3*3.6+7*4)/12 = 3.23
 PrintAll() # Check all the tables
 
 print('''\n==== Test Stage 2 ====
@@ -287,7 +303,10 @@ print('''\n==== Test Stage 2 ====
 RegisterCourse(83, 102)
 UpdateGrade(83, 102, 99)
 print('Average grade of course 102: ' + str(ComputeAverageGrade(102))) # Should get (88+99)/2 = 93.5
-RegisterCourse(84, 102) # Should fail because there's no capacity
+
+RegisterCourse(83, 103)
+RegisterCourse(82, 103)
+RegisterCourse(84, 103) # Should fail because there's no capacity
 print('Academic History of student 84: ' + str(RetrieveAcademicHistory(84))) # To check
 PrintAll() # Check all the tables
 
@@ -300,11 +319,11 @@ print('''\n==== Test Stage 3 ====
 PrintAll() # Before delete, there's a record about student 83
 DeleteStudent(83)
 PrintAll() # After delete, there's no records about student 83
-RegisterCourse(84, 102) # Should succeed this time
-UpdateCapacity(102, 1) # Should fail because 2 students (82 and 84) have registered for course 102
-RemoveRegistration(84, 102)
-UpdateCapacity(102, 1) # Should succeed this time
-print("{} students have enrolled in course 102.".format(EnrolledStudent(102))) # Only 1 student (student 82)
+RegisterCourse(84, 103) # Should succeed this time
+UpdateCapacity(103, 1) # Should fail because 2 students (82 and 84) have registered for course 103
+RemoveRegistration(84, 103)
+UpdateCapacity(103, 1) # Should succeed this time
+print("{} students have enrolled in course 102.".format(EnrolledStudent(103))) # Only 1 student (student 82)
 DeleteCourse(102)
 PrintAll()
 

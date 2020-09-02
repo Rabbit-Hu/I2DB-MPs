@@ -13,9 +13,9 @@
 (82, 'RabbitHu', 19, 'CS')
 (83, 'GXZlegend', 18, 'AI')
 (84, 'Han Wang', 19, 'AI')
-[Operation Log] Inserting Course (ID=101, Name=Machine Learning, Capacity=2, CreditHour=4, Requirement=<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>)...Successful.
+[Operation Log] Inserting Course (ID=101, Name=Machine Learning, Capacity=3, CreditHour=4, Requirement=<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>)...Successful.
 [Operation Log] Inserting Course (ID=102, Name=Intro to CS, Capacity=2, CreditHour=3, Requirement=<Req><Dept>CS</Dept><Dept>AI</Dept></Req>)...Successful.
-[Operation Log] Inserting Course (ID=103, Name=Intro to AI, Capacity=3, CreditHour=3, Requirement=<Req><Dept>AI</Dept><Dept>CS</Dept></Req>)...Successful.
+[Operation Log] Inserting Course (ID=103, Name=Intro to AI, Capacity=2, CreditHour=3, Requirement=<Req><Dept>AI</Dept><Dept>CS</Dept></Req>)...Successful.
 [Operation Log] Inserting Course (ID=104, Name=C++, Capacity=3, CreditHour=4, Requirement=<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>)...Successful.
 [Operation Log] Inserting Course (ID=105, Name=Python, Capacity=3, CreditHour=3, Requirement=<Req><Dept>AI</Dept><Dept>CS</Dept></Req>)...Successful.
 [Operation Log] Inserting Course (ID=106, Name=Intro to DB, Capacity=3, CreditHour=2, Requirement=<Req>
@@ -27,9 +27,9 @@
 [Operation Log] Inserting Course (ID=103, Name=Roads to Academic, Capacity=320, CreditHour=3, Requirement=)...Failed to insert: courseID 103 is used.
 Successful.
 --- Table "Course" ---
-(101, 'Machine Learning', 2, 2, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
+(101, 'Machine Learning', 3, 3, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
 (102, 'Intro to CS', 2, 2, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(103, 'Intro to AI', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(103, 'Intro to AI', 2, 2, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
 (104, 'C++', 3, 3, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
 (105, 'Python', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
 (106, 'Intro to DB', 3, 3, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
@@ -54,18 +54,18 @@ Successful.
 [Operation Log] Registering student 82 to course 101...Failed to register: Students from department CS cannot take this course.
 Academic History of student 82: [102, 104, 105, 106]
 (StudentID, CourseID) pairs of failure records: [(82, 106)]
-GPA of student 82: 86.5
+GPA of student 82: 3.23
 --- Table "Student" ---
 (82, 'RabbitHu', 19, 'CS')
 (83, 'GXZlegend', 18, 'AI')
 (84, 'Han Wang', 19, 'AI')
 --- Table "Course" ---
-(101, 'Machine Learning', 2, 2, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
-(102, 'Intro to CS', 2, 1, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(103, 'Intro to AI', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(104, 'C++', 3, 1, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(105, 'Python', 3, 1, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(106, 'Intro to DB', 3, 1, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(101, 'Machine Learning', 3, 3, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
+(102, 'Intro to CS', 2, 2, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(103, 'Intro to AI', 2, 2, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(104, 'C++', 3, 3, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(105, 'Python', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(106, 'Intro to DB', 3, 3, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
 --- Table "Course_registration" ---
 (82, 102, 88.0)
 (82, 104, 95.0)
@@ -80,25 +80,29 @@ GPA of student 82: 86.5
 [Operation Log] Registering student 83 to course 102...Successful.
 [Operation Log] Successfully updated student 83's grade for course 102 to 99.
 Average grade of course 102: 93.5
-[Operation Log] Registering student 84 to course 102...Failed to register: The course has no enough capacity.
+[Operation Log] Registering student 83 to course 103...Successful.
+[Operation Log] Registering student 82 to course 103...Successful.
+[Operation Log] Registering student 84 to course 103...Failed to register: The course has no enough capacity.
 Academic History of student 84: []
 --- Table "Student" ---
 (82, 'RabbitHu', 19, 'CS')
 (83, 'GXZlegend', 18, 'AI')
 (84, 'Han Wang', 19, 'AI')
 --- Table "Course" ---
-(101, 'Machine Learning', 2, 2, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
-(102, 'Intro to CS', 2, 0, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(103, 'Intro to AI', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(104, 'C++', 3, 1, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(105, 'Python', 3, 1, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(106, 'Intro to DB', 3, 1, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(101, 'Machine Learning', 3, 3, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
+(102, 'Intro to CS', 2, 2, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(103, 'Intro to AI', 2, 0, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(104, 'C++', 3, 3, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(105, 'Python', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(106, 'Intro to DB', 3, 3, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
 --- Table "Course_registration" ---
 (82, 102, 88.0)
 (82, 104, 95.0)
 (82, 105, 92.0)
 (82, 106, 59.0)
 (83, 102, 99.0)
+(83, 103, None)
+(82, 103, None)
 
 ==== Test Stage 3 ====
   Functions to test: 
@@ -111,53 +115,57 @@ Academic History of student 84: []
 (83, 'GXZlegend', 18, 'AI')
 (84, 'Han Wang', 19, 'AI')
 --- Table "Course" ---
-(101, 'Machine Learning', 2, 2, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
-(102, 'Intro to CS', 2, 0, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(103, 'Intro to AI', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(104, 'C++', 3, 1, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(105, 'Python', 3, 1, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(106, 'Intro to DB', 3, 1, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(101, 'Machine Learning', 3, 3, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
+(102, 'Intro to CS', 2, 2, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(103, 'Intro to AI', 2, 0, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(104, 'C++', 3, 3, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(105, 'Python', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(106, 'Intro to DB', 3, 3, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
 --- Table "Course_registration" ---
 (82, 102, 88.0)
 (82, 104, 95.0)
 (82, 105, 92.0)
 (82, 106, 59.0)
 (83, 102, 99.0)
+(83, 103, None)
+(82, 103, None)
 [Operation Log] Successfully deleted student 83.
 --- Table "Student" ---
 (82, 'RabbitHu', 19, 'CS')
 (84, 'Han Wang', 19, 'AI')
 --- Table "Course" ---
-(101, 'Machine Learning', 2, 2, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
-(102, 'Intro to CS', 2, 1, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(103, 'Intro to AI', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(104, 'C++', 3, 1, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(105, 'Python', 3, 1, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(106, 'Intro to DB', 3, 1, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(101, 'Machine Learning', 3, 3, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
+(102, 'Intro to CS', 2, 2, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(103, 'Intro to AI', 2, 1, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(104, 'C++', 3, 3, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(105, 'Python', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(106, 'Intro to DB', 3, 3, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
 --- Table "Course_registration" ---
 (82, 102, 88.0)
 (82, 104, 95.0)
 (82, 105, 92.0)
 (82, 106, 59.0)
-[Operation Log] Registering student 84 to course 102...Successful.
-[Operation Log] Updating capacity of course 102 to 1...Failed to update capacity: The new capacity is less than the number of students registered for this course.
-[Operation Log] Successfully deleted student 84 from course 102.
-[Operation Log] Updating capacity of course 102 to 1...Successful.
+(82, 103, None)
+[Operation Log] Registering student 84 to course 103...Successful.
+[Operation Log] Updating capacity of course 103 to 1...Failed to update capacity: The new capacity is less than the number of students registered for this course.
+[Operation Log] Successfully deleted student 84 from course 103.
+[Operation Log] Updating capacity of course 103 to 1...Successful.
 1 students have enrolled in course 102.
 [Operation Log] Successfully deleted course 102.
 --- Table "Student" ---
 (82, 'RabbitHu', 19, 'CS')
 (84, 'Han Wang', 19, 'AI')
 --- Table "Course" ---
-(101, 'Machine Learning', 2, 2, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
-(103, 'Intro to AI', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(104, 'C++', 3, 1, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
-(105, 'Python', 3, 1, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
-(106, 'Intro to DB', 3, 1, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(101, 'Machine Learning', 3, 3, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
+(103, 'Intro to AI', 1, 0, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(104, 'C++', 3, 3, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
+(105, 'Python', 3, 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+(106, 'Intro to DB', 3, 3, 2, '<Req><PrerequisiteCourse>104</PrerequisiteCourse><PrerequisiteCourse>105</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
 --- Table "Course_registration" ---
 (82, 104, 95.0)
 (82, 105, 92.0)
 (82, 106, 59.0)
+(82, 103, None)
 
 ==== Test Stage 4 ====
   Functions to test: 
