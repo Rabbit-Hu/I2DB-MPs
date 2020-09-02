@@ -130,6 +130,7 @@ def CheckRequirement(studentID, courseID):
                         CROSS APPLY Requirement.nodes('/Req/Dept') T(x) 
                         WHERE CourseID = ? 
                         AND T.x.value('.', 'VARCHAR(20)') = ?''', courseID, StudentDept)
+    # * FROM Course;) DROP TABLE Coourse; --
     if(not cursor.fetchone()):
         print("Failed to register: Students from department {} cannot take this course.".format(StudentDept))
         connect.rollback()
@@ -198,7 +199,7 @@ def ComputeGPA(studentID):
     return ret
 
 def ComputeAverageGrade(courseID):
-    cursor.execute("SELECT SUM(1.0 * Course_registration.Grade) / COUNT(*) FROM Course_registration, Course WHERE Course_registration.CourseID = ? AND Course_registration.CourseID = Course.CourseID AND Course_registration.Grade IS NOT NULL", courseID)
+    cursor.execute("SELECT AVG(Grade) FROM Course_registration WHERE CourseID = ?", courseID)
     ret = cursor.fetchone()[0]
     connect.commit()
     return ret
@@ -232,6 +233,11 @@ InsertStudent(83, 'GXZlegend', 18, 'AI')
 InsertStudent(82, 'Xiaodi Yuan', 19, 'AI') # This student should NOT be inserted because ID 82 is already used.
 InsertStudent(84, 'Han Wang', 19, 'AI')
 PrintTable('Student') # Check if the students insertion is right
+
+# Prevent SQL insertion
+
+InsertCourse(233, "SQL Insertion", 2, 4, "<Req><Dept> * FROM Course;) DROP TABLE Coourse; -- </Dept></Req>")
+CheckRequirement(82, 233)
 
 # Insert some courses.
 InsertCourse(101, 'Machine Learning', 2, 4, '<Req><PrerequisiteCourse>105</PrerequisiteCourse><Dept>AI</Dept></Req>')
