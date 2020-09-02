@@ -5,7 +5,7 @@
 
 - MP2: 根目录
     - README.md: MP2 说明文档
-    - MP2.py: 源代码（Python）
+    - MP2.py: 源代码（Python）
     - MP2.log: 源代码执行输出
     - screenshots: 运行截图文件夹
         - screenshots1~4.jepg 源代码执行输出的截图，内容同MP2.log
