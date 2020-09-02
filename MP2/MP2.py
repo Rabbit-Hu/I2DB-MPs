@@ -128,13 +128,17 @@ def CheckRequirement(studentID, courseID):
         connect.rollback()
         return False
     # Check department
+    if(cursor.execute(   '''SELECT Requirement.query('/Req/Dept/text()') 
+                            FROM Course
+                            WHERE CourseID = ? ''', courseID).fetchone()[0] == ''):
+        return True
     cursor.execute("SELECT Dept FROM Student WHERE ID = ?", studentID) # execute this piece of sql independently for error message
     StudentDept = cursor.fetchone()[0] 
     cursor.execute(  '''SELECT TOP 1 T.x.value('.', 'VARCHAR(20)') 
                         FROM Course 
                         CROSS APPLY Requirement.nodes('/Req/Dept') T(x) 
                         WHERE CourseID = ? 
-                        AND T.x.value('.', 'VARCHAR(20)') = ?''', courseID, StudentDept)
+                        AND T.x.value('.', 'VARCHAR(20)') = ? ''', courseID, StudentDept)
     # * FROM Course;) DROP TABLE Coourse; --
     if(not cursor.fetchone()):
         print("Failed to register: Students from department {} cannot take this course.".format(StudentDept))
@@ -260,7 +264,7 @@ InsertCourse(101, 'Machine Learning', 3, 4, '<Req><PrerequisiteCourse>105</Prere
 InsertCourse(102, 'Intro to CS', 2, 3, '<Req><Dept>CS</Dept><Dept>AI</Dept></Req>')
 InsertCourse(103, 'Intro to AI', 2, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
 InsertCourse(104, 'C++', 3, 4, '<Req><PrerequisiteCourse>102</PrerequisiteCourse><Dept>CS</Dept><Dept>AI</Dept></Req>')
-InsertCourse(105, 'Python', 3, 3, '<Req><Dept>AI</Dept><Dept>CS</Dept></Req>')
+InsertCourse(105, 'Python', 3, 3, '')
 InsertCourse(106, 'Intro to DB', 3, 2, '''<Req>
     <PrerequisiteCourse>104</PrerequisiteCourse>
     <PrerequisiteCourse>105</PrerequisiteCourse>
